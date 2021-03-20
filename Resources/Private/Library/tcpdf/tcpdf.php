@@ -18885,7 +18885,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					// data stream
 					$imgsrc = '@'.base64_decode(substr($imgsrc, 1));
 					$type = '';
-				} else {
+				} elseif (!file_exists($imgsrc)) {
 					if (($imgsrc[0] === '/') AND !empty($_SERVER['DOCUMENT_ROOT']) AND ($_SERVER['DOCUMENT_ROOT'] != '/')) {
 						// fix image path
 						$findroot = strpos($imgsrc, $_SERVER['DOCUMENT_ROOT']);
