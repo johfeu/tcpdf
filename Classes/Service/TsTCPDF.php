@@ -239,6 +239,7 @@ class TsTCPDF extends \TCPDF
                     $completePath = $templateRootPath . $templatePathAndFileName;
                     if (file_exists($completePath)) {
                         $view->setTemplatePathAndFilename($completePath);
+                        break;
                     }
                 }
             }
