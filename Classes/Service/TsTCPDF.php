@@ -231,12 +231,14 @@ class TsTCPDF extends \TCPDF
             $view->setPartialRootPaths($this->pdfSettings['view']['partialRootPaths']);
 
             if (is_array($this->pdfSettings['view']['templateRootPaths'] ?? null)) {
-                foreach ($this->pdfSettings['view']['templateRootPaths'] as $pathNameKey => $pathNameValue) {
-                    $templateRootPath = GeneralUtility::getFileAbsFileName(
-                        $pathNameValue
-                    );
+                $paths = $this->pdfSettings['view']['templateRootPaths'];
+                ksort($paths);
+                $paths = array_reverse($paths);
 
+                foreach ($paths as $pathNameValue) {
+                    $templateRootPath = GeneralUtility::getFileAbsFileName($pathNameValue);
                     $completePath = $templateRootPath . $templatePathAndFileName;
+
                     if (file_exists($completePath)) {
                         $view->setTemplatePathAndFilename($completePath);
                         break;
@@ -246,9 +248,7 @@ class TsTCPDF extends \TCPDF
         }
 
         if (!$view->getTemplatePathAndFilename()) {
-            $logManager = GeneralUtility::makeInstance(
-                \TYPO3\CMS\Core\Log\LogManagerInterface::class
-            );
+            $logManager = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Log\LogManager::class);
             $logger = $logManager->getLogger(__CLASS__);
             $logger->error(
                 'Cannot find Template for PdfService',
