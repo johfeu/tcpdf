@@ -7178,7 +7178,7 @@ class TCPDF {
 		} else {
 			$ximg = $x;
 		}
-		
+
 		if ($ismask OR $hidden) {
 			// image is not displayed
 			return $info['i'];
@@ -18974,9 +18974,9 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				if (isset($tag['height'])) {
 					$ih = $this->getHTMLUnitToUnits($tag['height'], ($tag['fontsize'] / $this->k), 'px', false);
 				}
-				if (($type == 'eps') OR ($type == 'ai')) {
+				if (isset($type) && ($type == 'eps' || $type == 'ai')) {
 					$this->ImageEps($imgsrc, $xpos, $this->y, $iw, $ih, $imglink, true, $align, '', $border, true);
-				} elseif ($type == 'svg') {
+				} elseif (isset($type) && $type == 'svg') {
 					$this->ImageSVG($imgsrc, $xpos, $this->y, $iw, $ih, $imglink, $align, '', $border, true);
 				} else {
 					$this->Image($imgsrc, $xpos, $this->y, $iw, $ih, '', $imglink, $align, false, 300, '', false, false, $border, false, false, true);
