@@ -156,7 +156,7 @@ class TsTCPDF extends \TCPDF
 
         $view->assignMultiple($assignToView);
 
-        $content = $view->render();
+        $content = (string)$view->render();
         $content = trim(preg_replace('~[\n]+~', '', $content));
 
         $this->writeHtmlCellWithConfig($content, $config);
