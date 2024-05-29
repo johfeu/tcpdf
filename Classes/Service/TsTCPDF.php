@@ -1,20 +1,13 @@
 <?php
-
 namespace Extcode\TCPDF\Service;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
 class TsTCPDF extends \TCPDF
 {
     /**
-     * @var ObjectManager
-     */
-    protected $objectManager;
-
-    /**
-     * @var array
+     * @var array<mixed>
      */
     protected $pdfSettings;
 
@@ -23,39 +16,26 @@ class TsTCPDF extends \TCPDF
      */
     protected $pdfType;
 
-    /**
-     * @param ObjectManager $objectManager
-     */
-    public function injectObjectManager(ObjectManager $objectManager)
-    {
-        $this->objectManager = $objectManager;
-    }
-
-    /**
-     * @return string
-     */
     public function getCartPdfType(): string
     {
         return $this->pdfType;
     }
 
-    /**
-     * @param string $pdfType
-     */
-    public function setCartPdfType(string $pdfType)
+    public function setCartPdfType(string $pdfType): void
     {
         $this->pdfType = $pdfType;
     }
 
     /**
-     * @param array $settings
+     * @param array<mixed> $settings
+     * @return void
      */
-    public function setSettings(array $settings)
+    public function setSettings(array $settings): void
     {
         $this->pdfSettings = $settings;
     }
 
-    public function header()
+    public function header(): void
     {
         if (!empty($this->pdfSettings[$this->pdfType])) {
             if (!empty($this->pdfSettings[$this->pdfType]['header'])) {
@@ -88,7 +68,7 @@ class TsTCPDF extends \TCPDF
         }
     }
 
-    public function footer()
+    public function footer(): void
     {
         if (!empty($this->pdfSettings[$this->pdfType])) {
             if (!empty($this->pdfSettings[$this->pdfType]['footer'])) {
@@ -123,18 +103,17 @@ class TsTCPDF extends \TCPDF
 
     /**
      * render Standalone View
-     *
      * @param string $templatePath
      * @param string $type
-     * @param array $config
-     * @param array $assignToView
+     * @param array<mixed> $config
+     * @param array<mixed> $assignToView
      */
     public function renderStandaloneView(
         string $templatePath,
         string $type,
         array $config,
         array $assignToView = []
-    ) {
+    ): void {
         $view = $this->getStandaloneView($templatePath, ucfirst($type));
 
         if (!empty($config['file'])) {
@@ -157,18 +136,17 @@ class TsTCPDF extends \TCPDF
         $view->assignMultiple($assignToView);
 
         $content = (string)$view->render();
-        $content = trim(preg_replace('~[\n]+~', '', $content));
+        $content = trim((string)preg_replace('~[\n]+~', '', $content));
 
         $this->writeHtmlCellWithConfig($content, $config);
     }
 
     /**
      * Write HTML Cell with configuration
-     *
      * @param string $content
-     * @param array $config
+     * @param array<mixed> $config
      */
-    public function writeHtmlCellWithConfig(string $content, array $config)
+    public function writeHtmlCellWithConfig(string $content, array $config): void
     {
         $width = $config['width'];
         $height = 0;
@@ -211,12 +189,6 @@ class TsTCPDF extends \TCPDF
 
     /**
      * Get standalone View
-     *
-     * @param string $templatePath
-     * @param string $templateFileName
-     * @param string $format
-     *
-     * @return StandaloneView
      */
     public function getStandaloneView(string $templatePath, string $templateFileName = 'Default', string $format = 'html'): StandaloneView
     {
@@ -249,7 +221,7 @@ class TsTCPDF extends \TCPDF
 
         if (!$view->getTemplatePathAndFilename()) {
             $logManager = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Log\LogManager::class);
-            $logger = $logManager->getLogger(__CLASS__);
+            $logger = $logManager->getLogger(self::class);
             $logger->error(
                 'Cannot find Template for PdfService',
                 [
@@ -258,9 +230,6 @@ class TsTCPDF extends \TCPDF
                 ]
             );
         }
-
-        // set controller extension name for translation
-        $view->getRequest()->setControllerExtensionName('Tcpdf');
 
         return $view;
     }
