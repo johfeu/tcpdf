@@ -120,7 +120,13 @@ class TsTCPDF extends \TCPDF
             $file = GeneralUtility::getFileAbsFileName(
                 $config['file']
             );
-            $view->assign('file', $file);
+            // base64_encode because tcpdf prepends the filepath with $_SERVER['DOCUMENT_ROOT'] in tcpdf/tcpdf.php:19067
+            // which is different to the absolute file path because of TYPO3 public symlink
+            $fileparts = explode('.', $file);
+            $ext = end($fileparts);
+            $image = 'data:image/' . $ext . ';base64,' . base64_encode(file_get_contents($file));
+
+            $view->assign('file', $image);
             if (isset($config['width'])) {
                 $view->assign('width', $config['width']);
             }
