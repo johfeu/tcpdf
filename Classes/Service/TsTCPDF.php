@@ -116,16 +116,16 @@ class TsTCPDF extends \TCPDF
     ): void {
         $view = $this->getStandaloneView($templatePath, ucfirst($type));
 
-        if (!empty($config['file'])) {
+        if (isset($config['file'])) {
             $file = GeneralUtility::getFileAbsFileName(
                 $config['file']
             );
             $view->assign('file', $file);
-            if (!empty($config['width'])) {
+            if (isset($config['width'])) {
                 $view->assign('width', $config['width']);
             }
-            if (!empty($config['height'])) {
-                $view->assign('heigth', $config['heigth']);
+            if (isset($config['height'])) {
+                $view->assign('height', $config['height']);
             }
         }
         if ($type === 'page') {
@@ -150,21 +150,21 @@ class TsTCPDF extends \TCPDF
     {
         $width = $config['width'];
         $height = 0;
-        if (!empty($config['height'])) {
+        if (isset($config['height'])) {
             $height = (int)$config['height'];
         }
-        $positionX = $config['positionX'] ?? '0';
-        $positionY = $config['positionY'] ?? '0';
+        $positionX = $config['positionX'] ?? null;
+        $positionY = $config['positionY'] ?? null;
         $align = 'L';
-        if (!empty($config['align'])) {
+        if (isset($config['align'])) {
             $align = $config['align'];
         }
 
         $oldFontSize = $this->getFontSizePt();
-        if (!empty($config['fontSize'])) {
+        if (isset($config['fontSize'])) {
             $this->SetFontSize($config['fontSize']);
         }
-        if (!empty($config['spacingY'])) {
+        if (isset($config['spacingY'])) {
             $this->setY($this->getY() + $config['spacingY']);
         }
 
@@ -182,7 +182,7 @@ class TsTCPDF extends \TCPDF
             true
         );
 
-        if (!empty($config['fontSize'])) {
+        if (isset($config['fontSize'])) {
             $this->SetFontSize($oldFontSize);
         }
     }
